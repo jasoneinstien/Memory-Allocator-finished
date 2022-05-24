@@ -163,49 +163,25 @@ void *calloc(size_t num , size_t nsize){
     memset(block , 0 , size);
     return block;
 }
-//realloct memory , reshape the space to the size that user want 
-void *realloc(void* block , size_t size){
+
+//realloc --> resize space size
+void *realloc(void *block , size_t size){
     header_t *header;
-    void *ret; 
-    //check the block have a size or not , if not --> malloc function 
-    if(!block || size)
-        return malloc(size);
-    
-    //set the pointer one byte before that
-    header = (header_t*) block -1;
-
-    //if size already enough return original pointer
-    //no operatopn is needed 
-    if(header -> s.size >= size)
-        return block; 
-
-    //if the space is not enough
-    //crease a space with malloc function 
+    void * ret; 
+    //if it is a null pointer
+    if(!block || !size)
+        return malloc(size); 
+    header = (header_t*) block - 1;
+    if(header->s.size >= size) return block; 
     ret = malloc(size);
-    
-    //copy block -> ret provide given sizen (memcpy function)
-    //free original block (since it is resize , delte orginal one
     if(ret){
-        memcpy(ret, block , header -> s.size);
+        memcpy(ret , block , header->s.size);
         free(block);
-
     }
     return ret;
 }
 
 int main(){
-   //testing 
-   //   
-    char * str;
-    str = (char *) malloc(15);
-    strcpy(str , "jasonmemoryallo");
-    printf("String = %s , Address = %u\n" , str , str); 
-    
-    str = (char*) realloc(str , 25);
-    strcpy(str , "jasonmemoryallocator");
-    printf("String = %s , Address = %u " , str , str); 
-    free(str);
-    
     return 0;
 }
 
